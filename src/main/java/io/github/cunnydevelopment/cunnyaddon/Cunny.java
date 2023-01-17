@@ -11,6 +11,7 @@ import io.github.cunnydevelopment.cunnyaddon.utility.Categories;
 import io.github.cunnydevelopment.cunnyaddon.utility.FileSystem;
 import io.github.cunnydevelopment.cunnyaddon.utility.SpecialEffects;
 import io.github.cunnydevelopment.cunnyaddon.utility.StringUtils;
+import io.github.cunnydevelopment.cunnyaddon.utility.blocks.BlockHandling;
 import io.github.cunnydevelopment.cunnyaddon.utility.modules.external.ModuleReference;
 import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.CompatibilityConfig;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
@@ -51,6 +52,7 @@ public class Cunny extends MeteorAddon {
         // Events are automatically added once the instance is initialized.
         new CompatibilityConfig();
         new ModuleReference();
+        new BlockHandling();
 
         // HUDs are automatically added once the instance is initialized.
         new GelbooruScroller();

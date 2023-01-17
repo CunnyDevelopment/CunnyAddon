@@ -1,6 +1,7 @@
 package io.github.cunnydevelopment.cunnyaddon.utility.blocks;
 
 import io.github.cunnydevelopment.cunnyaddon.utility.PacketUtils;
+import io.github.cunnydevelopment.cunnyaddon.utility.UtilityEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
-public class BlockHandling {
+public class BlockHandling extends UtilityEvent {
     private static final List<BlockPos> antiGhostBlocks = new ArrayList<>();
     private static BlockPos pos = BlockPos.ORIGIN;
     private final List<PlayerActionC2SPacket.Action> actions = List.of(PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK, PlayerActionC2SPacket.Action.START_DESTROY_BLOCK, PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK);
