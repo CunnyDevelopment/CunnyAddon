@@ -1,0 +1,19 @@
+accessWidener	v1	named
+
+mutable   field  net/minecraft/client/MinecraftClient   options   Lnet/minecraft/client/option/GameOptions;
+mutable   field  net/minecraft/client/MinecraftClient   worldRenderer   Lnet/minecraft/client/render/WorldRenderer;
+
+accessible   class  net/minecraft/client/network/ClientPlayNetworkHandler
+mutable   field  net/minecraft/client/network/ClientPlayerEntity   networkHandler   Lnet/minecraft/client/network/ClientPlayNetworkHandler;
+
+accessible   class  net/minecraft/network/ClientConnection
+accessible   field  net/minecraft/network/ClientConnection   channel   Lio/netty/channel/Channel;
+
+
+accessible   field  net/minecraft/block/AbstractBlock   collidable   Z
+mutable   field  net/minecraft/block/AbstractBlock   collidable   Z
+
+accessible   field  net/minecraft/client/network/ClientPlayNetworkHandler   lastSeenMessagesCollector   Lnet/minecraft/network/message/LastSeenMessagesCollector;
+accessible   field  net/minecraft/client/network/ClientPlayNetworkHandler   session   Lnet/minecraft/network/encryption/ClientPlayerSession;
+
+accessible   method   net/minecraft/server/network/ServerPlayNetworkHandler   hasIllegalCharacter   (Ljava/lang/String;)Z

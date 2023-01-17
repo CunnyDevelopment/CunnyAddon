@@ -1,27 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "addon-template",
+  "id": "cunny-addon",
   "version": "${version}",
-  "name": "Addon Template",
-  "description": "An addon template for the Meteor addons.",
+  "name": "Cunny Addon",
+  "description": "A meteor addon made by Neko",
   "authors": [
-    "seasnail"
+    "CunnyDevelopment"
   ],
   "contact": {
-    "repo": "https://github.com/MeteorDevelopment/meteor-addon-template"
+    "repo": "https://github.com/CunnyDevelopment/CunnyAddon"
   },
   "icon": "assets/template/icon.png",
   "environment": "client",
   "entrypoints": {
     "meteor": [
-      "com.example.addon.Addon"
+      "io.github.cunnydevelopment.cunnyaddon.Cunny"
     ]
   },
   "mixins": [
-    "addon-template.mixins.json"
+    "cunny.mixins.json",
+    "cunny_meteorclient.mixins.json"
   ],
+  "accessWidener": "cunny.accesswidener",
   "custom": {
-    "meteor-client:color": "225,25,25"
+    "meteor-client:color": "0,255,234"
   },
   "depends": {
     "java": ">=17",
