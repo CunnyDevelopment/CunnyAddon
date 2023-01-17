@@ -23,6 +23,11 @@ public abstract class WTooltipMixin {
     @Redirect(method = "init", at = @At(value = "INVOKE", target = "Lmeteordevelopment/meteorclient/gui/widgets/WTooltip;add(Lmeteordevelopment/meteorclient/gui/widgets/WWidget;)Lmeteordevelopment/meteorclient/gui/utils/Cell;"))
     public Cell<WVerticalList> addTail(WTooltip instance, WWidget wWidget) {
         WVerticalList info = instance.theme.verticalList();
+        if (text.isBlank() || !text.contains("^CLASSNAME:")) {
+            info.add(instance.theme.label(text));
+            return instance.add(info).pad(4);
+        }
+
         String[] splitDesc = text.split("\\^CLASSNAME:");
 
         info.add(instance.theme.label(splitDesc[0]));
