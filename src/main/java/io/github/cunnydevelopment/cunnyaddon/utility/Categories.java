@@ -2,6 +2,8 @@ package io.github.cunnydevelopment.cunnyaddon.utility;
 
 import meteordevelopment.meteorclient.systems.hud.HudGroup;
 import meteordevelopment.meteorclient.systems.modules.Category;
+import meteordevelopment.meteorclient.systems.modules.Module;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +13,12 @@ public class Categories {
     public static final Category MOVEMENT = new Category("Movement+");
     public static final Category MISC = new Category("Misc+");
     public static final Category CHAT = new Category("Chat");
+    public static final Category RENDER = new Category("Render+");
     public static final Category EXPLOITS = new Category("Exploits");
     public static final Category UNKNOWN = new Category("Unknown");
     public static final HudGroup HUD = new HudGroup("Cunny Addon");
     public static final List<String> KNOWN_CATEGORIES = List.of(
-        "Combat+", "Movement+", "Misc+", "Chat", "Exploits", "Unknown", "Combat", "Movement", "Misc", "Player", "Render", "World"
+        "Combat+", "Movement+", "Misc+", "Chat", "Render+", "Exploits", "Unknown", "Combat", "Movement", "Misc", "Player", "Render", "World"
     );
     private static final List<String> ADDED_CATEGORIES = new ArrayList<>();
 
@@ -31,6 +34,7 @@ public class Categories {
             case "movement+" -> MOVEMENT;
             case "misc+" -> MISC;
             case "chat" -> CHAT;
+            case "render+" -> RENDER;
             case "exploits" -> EXPLOITS;
             case "combat" -> meteordevelopment.meteorclient.systems.modules.Categories.Combat;
             case "movement" -> meteordevelopment.meteorclient.systems.modules.Categories.Movement;
@@ -40,5 +44,15 @@ public class Categories {
             case "world" -> meteordevelopment.meteorclient.systems.modules.Categories.World;
             default -> UNKNOWN;
         };
+    }
+
+    public static Category getFromModule(@NotNull Module module, String str) {
+        if (!module.getClass().getPackageName().startsWith("meteordevelopment.meteorclient.")) {
+            if (KNOWN_CATEGORIES.contains(str + "+")) {
+                return get(str + "+");
+            }
+        }
+
+        return get(str);
     }
 }

@@ -364,6 +364,12 @@ public class InventoryUtils {
 
     /**
      * Move item.
+     * Expected behavior:
+     ** Click Slot, Action Type: PICKUP, Slot: 6, Button: 0, Item Key: item.minecraft.netherite_chestplate, Sync Id: 0, Revision: 23
+     ** Click Slot, Action Type: PICKUP, Slot: 11, Button: 0, Item Key: item.minecraft.elytra, Sync Id: 0, Revision: 25
+     ** Click Slot, Action Type: SWAP, Slot: 17, Button: 38, Item Key: item.minecraft.elytra, Sync Id: 0, Revision: 25
+     ** Click Slot, Action Type: PICKUP, Slot: 17, Button: 0, Item Key: block.minecraft.air, Sync Id: 0, Revision: 25
+     ** Click Slot, Action Type: SWAP, Slot: 17, Button: 38, Item Key: block.minecraft.air, Sync Id: 0, Revision: 25
      *
      * @param from the from
      * @param to   the to
@@ -375,9 +381,9 @@ public class InventoryUtils {
         assert interact != null;
         interact.clickSlot(handler.syncId, from, 0, SlotActionType.PICKUP, mc.player);
         interact.clickSlot(handler.syncId, to, 0, SlotActionType.PICKUP, mc.player);
-        if (!handler.getCursorStack().isEmpty()) {
-            interact.clickSlot(handler.syncId, from, 0, SlotActionType.PICKUP, mc.player);
-        }
+        interact.clickSlot(handler.syncId, to + 6, 38, SlotActionType.SWAP, mc.player);
+        interact.clickSlot(handler.syncId, to + 6, 0, SlotActionType.PICKUP, mc.player);
+        interact.clickSlot(handler.syncId, to + 6, 38, SlotActionType.SWAP, mc.player);
     }
 
     /**

@@ -1,4 +1,4 @@
-package io.github.cunnydevelopment.cunnyaddon.utility.modules.internal;
+package io.github.cunnydevelopment.cunnyaddon.utility.rendering;
 
 import meteordevelopment.meteorclient.utils.render.color.Color;
 

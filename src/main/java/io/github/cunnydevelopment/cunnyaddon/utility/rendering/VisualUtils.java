@@ -1,4 +1,4 @@
-package io.github.cunnydevelopment.cunnyaddon.utility.modules.external;
+package io.github.cunnydevelopment.cunnyaddon.utility.rendering;
 
 import net.minecraft.util.Identifier;
 

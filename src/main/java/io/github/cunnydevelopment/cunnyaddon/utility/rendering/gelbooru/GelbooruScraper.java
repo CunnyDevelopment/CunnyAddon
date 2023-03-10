@@ -1,7 +1,8 @@
-package io.github.cunnydevelopment.cunnyaddon.utility.modules.external.gelbooru;
+package io.github.cunnydevelopment.cunnyaddon.utility.rendering.gelbooru;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.cunnydevelopment.cunnyaddon.Cunny;
 import io.github.cunnydevelopment.cunnyaddon.utility.FileSystem;
 
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class GelbooruScraper {
         rawTags = str;
         tags = String.join("+", str.split(" ")).toLowerCase();
         if (!newTags.isEmpty()) tags += (tags.isBlank() ? "" : "+") + String.join("+", newTags);
+        Cunny.LOG.info(tags);
     }
 
     public void nextPost() {

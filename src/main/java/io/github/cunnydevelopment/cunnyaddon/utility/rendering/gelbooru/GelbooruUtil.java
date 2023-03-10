@@ -1,4 +1,4 @@
-package io.github.cunnydevelopment.cunnyaddon.utility.modules.external.gelbooru;
+package io.github.cunnydevelopment.cunnyaddon.utility.rendering.gelbooru;
 
 import io.github.cunnydevelopment.cunnyaddon.utility.FileSystem;
 

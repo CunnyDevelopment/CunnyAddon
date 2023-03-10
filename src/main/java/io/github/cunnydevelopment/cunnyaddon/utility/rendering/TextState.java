@@ -1,4 +1,4 @@
-package io.github.cunnydevelopment.cunnyaddon.utility.modules.internal;
+package io.github.cunnydevelopment.cunnyaddon.utility.rendering;
 
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WLabel;
@@ -14,8 +14,9 @@ public class TextState {
         parts.add(new TextPart(text));
     }
 
-    public void addPart(String text, Color color) {
+    public TextState addPart(String text, Color color) {
         parts.add(new TextPart(text, color));
+        return this;
     }
 
     public List<WLabel> getParts(GuiTheme theme) {
@@ -26,5 +27,9 @@ public class TextState {
             labels.add(label);
         }
         return labels;
+    }
+
+    public List<TextPart> getParts() {
+        return parts;
     }
 }

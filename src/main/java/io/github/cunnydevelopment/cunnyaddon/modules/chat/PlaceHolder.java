@@ -4,8 +4,8 @@ import io.github.cunnydevelopment.cunnyaddon.modules.CunnyModule;
 import io.github.cunnydevelopment.cunnyaddon.utility.ArrayUtils;
 import io.github.cunnydevelopment.cunnyaddon.utility.Categories;
 import io.github.cunnydevelopment.cunnyaddon.utility.StringUtils;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.ModuleInfo;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.TextState;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.ModuleInfo;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.TextState;
 import meteordevelopment.meteorclient.events.game.SendMessageEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.Setting;
@@ -100,7 +100,6 @@ public class PlaceHolder extends CunnyModule {
     }
 
     public void addDefault() {
-        add(":skull:", "\uD83D\uDD71");
         add(":skull:", "☠");
         add(":heart:", "♥");
         add(":heart_hollow:", "♡");
@@ -109,12 +108,10 @@ public class PlaceHolder extends CunnyModule {
         add(":kitty:", "子猫");
         add(":neko:", "猫");
         add(":god:", "Our lord and savior Neko.");
-        add(":pray:", "\uD83D\uDE4F");
         add(":cross:", "✟");
         add(":cross:", "✞");
         add(":yes:", "✓");
         add(":no:", "✘");
-        add(":hecate:", "\uD83D\uDDDD");
         add(":left_brick:", "╘");
         add(":right_brick:", "╛");
         add(":squiggly:", "⸾");

@@ -1,10 +1,12 @@
 package io.github.cunnydevelopment.cunnyaddon.utility.blocks;
 
 import io.github.cunnydevelopment.cunnyaddon.Cunny;
+import io.github.cunnydevelopment.cunnyaddon.modules.misc.Global;
 import io.github.cunnydevelopment.cunnyaddon.utility.EntityUtils;
 import io.github.cunnydevelopment.cunnyaddon.utility.InventoryUtils;
 import io.github.cunnydevelopment.cunnyaddon.utility.PacketUtils;
 import meteordevelopment.meteorclient.utils.player.FindItemResult;
+import meteordevelopment.meteorclient.utils.player.Rotations;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -17,10 +19,12 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -179,7 +183,13 @@ public class BlockUtils {
 
     public static boolean canPlace(BlockPos pos) {
         assert mc.player != null;
-        assert mc.world != null;
+
+        if (Global.isRayCasting()) {
+            BlockHitResult hitResult = getBlockHitResult(pos);
+
+            if (hitResult.getType() != HitResult.Type.BLOCK || !hitResult.getBlockPos().offset(hitResult.getSide().getOpposite()).equals(pos)) return false;
+        }
+
         List<Entity> entities = mc.player.world.getOtherEntities(null, new Box(pos.add(3, 3, 3), pos.add(-3, -3, -3)), entity -> {
             if (EntityUtils.canPlaceIn(entity)) {
                 return false;
@@ -191,6 +201,7 @@ public class BlockUtils {
     }
 
     public static boolean hasEntitiesInside(BlockPos pos) {
+        assert mc.player != null;
         List<Entity> entities = mc.player.world.getOtherEntities(null, new Box(pos.add(3, 3, 3), pos.add(-3, -3, -3)), entity -> {
             if (EntityUtils.canPlaceIn(entity)) {
                 return false;
@@ -211,6 +222,7 @@ public class BlockUtils {
     }
 
     public static Direction getPlaceDirection(BlockPos pos) {
+        if (Global.isStrictPlacing()) return meteordevelopment.meteorclient.utils.world.BlockUtils.getPlaceSide(pos);
         for (Direction direction : getHorizontals()) {
             if (!isAir(pos.offset(direction))) return direction;
         }
@@ -251,6 +263,17 @@ public class BlockUtils {
         return placeBlock(item, pos, packet, airPlace, antiGhost, false);
     }
 
+    public static BlockHitResult getBlockHitResult(BlockPos pos) {
+        if (Global.isRayCasting()) {
+            assert mc.player != null;
+            Vec3d vec3d = mc.player.getCameraPosVec(mc.getTickDelta());
+            Vec3d vec3d2 = mc.player.getRotationVector((float) Rotations.getPitch(pos), (float) Rotations.getYaw(pos));
+            Vec3d vec3d3 = vec3d.add(vec3d2.x * Global.getRayCastingDistance(), vec3d2.y * Global.getRayCastingDistance(), vec3d2.z * Global.getRayCastingDistance());
+            return mc.player.world.raycast(new RaycastContext(vec3d, vec3d3, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, mc.player));
+        }
+        return new BlockHitResult(clickOffset(pos), getPlaceDirection(pos), pos, false);
+    }
+
     public static boolean placeBlock(FindItemResult item, BlockPos pos, boolean packet, boolean airPlace, boolean antiGhost, boolean silent) {
         assert mc.player != null;
         assert mc.interactionManager != null;
@@ -276,20 +299,20 @@ public class BlockUtils {
             if (airPos == pos) airPos = pos.offset(Direction.DOWN);
             if (packet) {
                 BlockHandling.swingHand();
-                PacketUtils.send(new PlayerInteractBlockC2SPacket(hand, new BlockHitResult(clickOffset(airPos), getPlaceDirection(airPos), airPos, false), 0));
+                PacketUtils.send(new PlayerInteractBlockC2SPacket(hand, getBlockHitResult(airPos), 0));
             } else {
                 BlockHandling.swingHand();
-                mc.interactionManager.interactBlock(mc.player, hand, new BlockHitResult(clickOffset(airPos), getPlaceDirection(airPos), airPos, false));
+                mc.interactionManager.interactBlock(mc.player, hand, getBlockHitResult(airPos));
                 if (antiGhost) BlockHandling.addGhostBlock(airPos);
             }
         }
 
         if (packet) {
             BlockHandling.swingHand();
-            PacketUtils.send(new PlayerInteractBlockC2SPacket(hand, new BlockHitResult(clickOffset(pos), getPlaceDirection(pos), pos, false), 0));
+            PacketUtils.send(new PlayerInteractBlockC2SPacket(hand, getBlockHitResult(pos), 0));
         } else {
             BlockHandling.swingHand();
-            mc.interactionManager.interactBlock(mc.player, hand, new BlockHitResult(clickOffset(pos), getPlaceDirection(pos), pos, false));
+            mc.interactionManager.interactBlock(mc.player, hand, getBlockHitResult(pos));
             if (antiGhost) BlockHandling.addGhostBlock(pos);
         }
 

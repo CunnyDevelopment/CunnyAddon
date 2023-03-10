@@ -36,7 +36,6 @@ public class ModuleReference extends UtilityEvent {
     @Setter
     private static int fakeExplosionRadius = 0;
 
-
     private int ticks = 5;
 
     public static boolean state(Class<? extends Module> module) {
@@ -58,11 +57,17 @@ public class ModuleReference extends UtilityEvent {
 
     public static void save() {
         ReferenceConfig config = new ReferenceConfig();
-        INVERTED_BIND.forEach(module -> config.invertedBind.add(module.name));
+        INVERTED_BIND.forEach(module -> {
+            if (module != null) config.invertedBind.add(module.name);
+        });
 
-        TOGGLE_ON_LEAVE.forEach(module -> config.toggleOnLeave.add(module.name));
+        TOGGLE_ON_LEAVE.forEach(module -> {
+            if (module != null) config.toggleOnLeave.add(module.name);
+        });
 
-        MODULE_RENAME.forEach((k, v) -> config.moduleMap.put(k.name, v));
+        MODULE_RENAME.forEach((k, v) -> {
+            if (k != null) config.moduleMap.put(k.name, v);
+        });
 
         FileSystem.write(FileSystem.CUNNY_PATH + "references.json", GSON.toJson(config));
     }
@@ -70,11 +75,16 @@ public class ModuleReference extends UtilityEvent {
     public static void load() {
         if (!FileSystem.exists(FileSystem.CUNNY_PATH + "references.json")) return;
         ReferenceConfig config = GSON.fromJson(FileSystem.read(FileSystem.CUNNY_PATH + "references.json"), ReferenceConfig.class);
-        config.invertedBind.forEach(module -> INVERTED_BIND.add(Modules.get().get(module)));
+        config.invertedBind.forEach(k -> {
+            if (Modules.get().get(k) != null) INVERTED_BIND.add(Modules.get().get(k));
+        });
 
-        config.toggleOnLeave.forEach(module -> TOGGLE_ON_LEAVE.add(Modules.get().get(module)));
+        config.toggleOnLeave.forEach(k -> {
+            if (Modules.get().get(k) != null) TOGGLE_ON_LEAVE.add(Modules.get().get(k));
+        });
 
         config.moduleMap.forEach((k, v) -> {
+            if (Modules.get().get(k) == null) return;
             MODULE_RENAME.put(Modules.get().get(k), v);
             ((ModuleAccessor) Modules.get().get(k)).setTitle(v);
         });

@@ -1,8 +1,7 @@
 package io.github.cunnydevelopment.cunnyaddon.mixins.meteorclient;
 
-import io.github.cunnydevelopment.cunnyaddon.Cunny;
 import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.CompatibilityConfig;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.TextState;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.TextState;
 import meteordevelopment.meteorclient.gui.utils.Cell;
 import meteordevelopment.meteorclient.gui.widgets.WLabel;
 import meteordevelopment.meteorclient.gui.widgets.WTooltip;
@@ -31,8 +30,6 @@ public abstract class WTooltipMixin {
         String[] splitDesc = text.split("\\^CLASSNAME:");
 
         info.add(instance.theme.label(splitDesc[0]));
-
-        Cunny.LOG.info("Module {}, attempted to add tooltip info.", splitDesc[1]);
 
         String from = CompatibilityConfig.getAddedBy(splitDesc[1]);
 

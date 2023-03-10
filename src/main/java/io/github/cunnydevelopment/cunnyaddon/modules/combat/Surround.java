@@ -1,5 +1,6 @@
 package io.github.cunnydevelopment.cunnyaddon.modules.combat;
 
+import io.github.cunnydevelopment.cunnyaddon.events.MidTickEvent;
 import io.github.cunnydevelopment.cunnyaddon.modules.CunnyModule;
 import io.github.cunnydevelopment.cunnyaddon.utility.Categories;
 import io.github.cunnydevelopment.cunnyaddon.utility.EntityUtils;
@@ -12,6 +13,7 @@ import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.utils.player.FindItemResult;
 import meteordevelopment.meteorclient.utils.player.InvUtils;
+import meteordevelopment.meteorclient.utils.player.Rotations;
 import meteordevelopment.meteorclient.utils.render.color.Color;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.orbit.EventHandler;
@@ -24,14 +26,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Surround extends CunnyModule {
-    private final Map<BlockPos, VisualType> renderMap = new HashMap<>();
-    private final List<BlockPos> savedBlocks = new ArrayList<>();
+    private final Map<BlockPos, VisualType> renderMap = Collections.synchronizedMap(new HashMap<>());
+    private final List<BlockPos> savedBlocks = Collections.synchronizedList(new ArrayList<>());
 
     // Basic
     private final SettingGroup sgDefault = settings.getDefaultGroup();
@@ -39,6 +38,11 @@ public class Surround extends CunnyModule {
         .name("tick-mode")
         .description("Which tick event to use.")
         .defaultValue(TickType.Pre)
+        .build());
+    public final Setting<Boolean> midTick = sgDefault.add(new BoolSetting.Builder()
+        .name("mid-tick")
+        .description("Executes code mid-tick.")
+        .defaultValue(true)
         .build());
     public final Setting<BlockUtils.PlaceMode> placeMode = sgDefault.add(new EnumSetting.Builder<BlockUtils.PlaceMode>()
         .name("placing")
@@ -63,6 +67,12 @@ public class Surround extends CunnyModule {
         .defaultValue(List.of(Items.ENDER_CHEST))
         .filter(CrystalUtils.FALLBACK_BLOCKS::contains)
         .build());
+    public final Setting<Boolean> rotate = sgDefault.add(new BoolSetting.Builder()
+        .name("rotate")
+        .description("Automatically rotate to the placed block.")
+        .defaultValue(true)
+        .build());
+
 
     // Protection
     private final SettingGroup sgProtect = settings.createGroup("Protection");
@@ -147,6 +157,11 @@ public class Surround extends CunnyModule {
     }
 
     @EventHandler
+    private void onTick(MidTickEvent event) {
+        if (midTick.get()) tick();
+    }
+
+    @EventHandler
     private void onTick(TickEvent.Pre event) {
         if (tickType.get() == TickType.Pre) tick();
     }
@@ -169,18 +184,23 @@ public class Surround extends CunnyModule {
     @EventHandler
     private void onRender(Render3DEvent event) {
         if (!render.get()) return;
-        renderMap.forEach((blockPos, visualType) -> {
-            Color color;
-            switch (visualType) {
-                case PLACED -> color = placedColor.get();
-                case WAITING -> color = waitingColor.get();
-                case CONFLICTING -> color = conflictingColor.get();
-                case FAIL -> color = failColor.get();
+        try {
+            synchronized (renderMap) {
+                for (Map.Entry<BlockPos, VisualType> entry : renderMap.entrySet()) {
+                    Color color;
+                    switch (entry.getValue()) {
+                        case PLACED -> color = placedColor.get();
+                        case WAITING -> color = waitingColor.get();
+                        case CONFLICTING -> color = conflictingColor.get();
+                        case FAIL -> color = failColor.get();
 
-                default -> throw new IllegalStateException("Unexpected value: " + visualType);
+                        default -> throw new IllegalStateException("Unexpected value: " + entry.getValue().name());
+                    }
+                    RenderUtils.renderBlock(event.renderer, entry.getKey(), color, color.copy().a(color.a + 20));
+                }
             }
-            RenderUtils.renderBlock(event.renderer, blockPos, color, color.copy().a(color.a + 20));
-        });
+        } catch (ConcurrentModificationException ignored) {
+        }
     }
 
     public void placeBlocks() {
@@ -191,12 +211,20 @@ public class Surround extends CunnyModule {
             int blocks = 0;
         };
         ticks = tickDelay.get();
-        renderMap.clear();
+
         BlockPos original = mc.player.getBlockPos();
         if (!currentHole.equals(original)) {
             currentHole = original;
             savedBlocks.clear();
         }
+
+        try {
+            synchronized (renderMap) {
+                renderMap.clear();
+            }
+        } catch (ConcurrentModificationException ignored) {
+        }
+
 
         for (Direction direction : EntityUtils.getHorizontals()) {
             BlockPos offset = original.offset(direction);
@@ -257,18 +285,20 @@ public class Surround extends CunnyModule {
         }
 
         if (saveReplaced.get() && ref.blocks < blocksPerTick.get()) {
-            for (BlockPos pos : savedBlocks) {
-                if (!BlockUtils.canExplode(pos)) {
-                    renderMap.put(pos, VisualType.PLACED);
-                    continue;
-                }
+            synchronized (savedBlocks) {
+                for (BlockPos pos : savedBlocks) {
+                    if (!BlockUtils.canExplode(pos)) {
+                        renderMap.put(pos, VisualType.PLACED);
+                        continue;
+                    }
 
-                if (ref.blocks >= blocksPerTick.get()) {
-                    renderMap.put(pos, VisualType.WAITING);
-                    continue;
-                }
+                    if (ref.blocks >= blocksPerTick.get()) {
+                        renderMap.put(pos, VisualType.WAITING);
+                        continue;
+                    }
 
-                if (place(pos)) ref.blocks++;
+                    if (place(pos)) ref.blocks++;
+                }
             }
         }
     }
@@ -281,6 +311,10 @@ public class Surround extends CunnyModule {
             if (!itemResult.found()) {
                 renderMap.put(pos, VisualType.FAIL);
                 return false;
+            }
+
+            if (rotate.get()) {
+                Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), 1000);
             }
 
             if (BlockUtils.placeBlock(itemResult, pos, placeMode.get() == BlockUtils.PlaceMode.Packet, true, true, true)) {

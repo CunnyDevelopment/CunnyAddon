@@ -1,9 +1,8 @@
 package io.github.cunnydevelopment.cunnyaddon.mixins.meteorclient;
 
 import io.github.cunnydevelopment.cunnyaddon.utility.modules.external.ModuleReference;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.CompatibilityConfig;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.ModuleInfo;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.TextState;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.ModuleInfo;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.TextState;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.WindowScreen;
 import meteordevelopment.meteorclient.gui.screens.ModuleScreen;

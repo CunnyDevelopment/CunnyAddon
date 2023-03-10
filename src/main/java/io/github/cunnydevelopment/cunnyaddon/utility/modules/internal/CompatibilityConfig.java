@@ -22,7 +22,7 @@ public class CompatibilityConfig extends UtilityEvent {
     // Maps/Lists for actions
     public static final Map<String, String> rename = new HashMap<>();
     public static final Map<String, String> recategorize = new HashMap<>();
-    public static  final List<String> remove = new ArrayList<>();
+    public static final List<String> remove = new ArrayList<>();
     // Class Dump
     public static final List<String> classes = new ArrayList<>();
     // Load status
@@ -41,7 +41,6 @@ public class CompatibilityConfig extends UtilityEvent {
         if (pkg.startsWith("meteordevelopment.meteorclient.")) return "Meteor";
         return "Unknown";
     }
-
 
 
     public static Color getColor(String mod) {

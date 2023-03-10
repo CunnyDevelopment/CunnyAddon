@@ -1,16 +1,16 @@
 package io.github.cunnydevelopment.cunnyaddon;
 
 import com.mojang.logging.LogUtils;
+import io.github.cunnydevelopment.cunnyaddon.hud.CoordsPlus;
 import io.github.cunnydevelopment.cunnyaddon.hud.GelbooruScroller;
 import io.github.cunnydevelopment.cunnyaddon.modules.chat.PlaceHolder;
 import io.github.cunnydevelopment.cunnyaddon.modules.chat.Spam;
 import io.github.cunnydevelopment.cunnyaddon.modules.combat.Surround;
 import io.github.cunnydevelopment.cunnyaddon.modules.misc.CunnyPresence;
+import io.github.cunnydevelopment.cunnyaddon.modules.misc.Global;
 import io.github.cunnydevelopment.cunnyaddon.modules.misc.PacketPlace;
-import io.github.cunnydevelopment.cunnyaddon.utility.Categories;
-import io.github.cunnydevelopment.cunnyaddon.utility.FileSystem;
-import io.github.cunnydevelopment.cunnyaddon.utility.SpecialEffects;
-import io.github.cunnydevelopment.cunnyaddon.utility.StringUtils;
+import io.github.cunnydevelopment.cunnyaddon.modules.render.NametagsPlus;
+import io.github.cunnydevelopment.cunnyaddon.utility.*;
 import io.github.cunnydevelopment.cunnyaddon.utility.blocks.BlockHandling;
 import io.github.cunnydevelopment.cunnyaddon.utility.modules.external.ModuleReference;
 import io.github.cunnydevelopment.cunnyaddon.utility.modules.internal.CompatibilityConfig;
@@ -30,31 +30,33 @@ public class Cunny extends MeteorAddon {
 
         FileSystem.mkdir(FileSystem.COMPATIBILITY_PATH);
 
-        // Modules are automatically added once the instance is initialized.
-
-        // Combat
-        new Surround();
-
-        // Chat
-        new PlaceHolder();
-        new Spam();
-
-        // Misc
-        new PacketPlace();
-        new CunnyPresence();
-
-
         // Various initialization methods, removing could break features or crash the Add-On;
         StringUtils.init();
         ModuleReference.load();
         SpecialEffects.load();
 
+        // Modules
+        // Chat
+        new PlaceHolder();
+        new Spam();
+        // Combat
+        new Surround();
+        // Misc
+        new CunnyPresence();
+        new PacketPlace();
+        new Global();
+        // Render
+        new NametagsPlus();
+        // Modules end here.
+
         // Events are automatically added once the instance is initialized.
         new CompatibilityConfig();
         new ModuleReference();
         new BlockHandling();
+        new MidTickHandler();
 
         // HUDs are automatically added once the instance is initialized.
+        new CoordsPlus();
         new GelbooruScroller();
 
         LOG.info("Cunny Addon took {}ns to load", System.nanoTime() - started);
@@ -67,6 +69,7 @@ public class Cunny extends MeteorAddon {
         Modules.registerCategory(Categories.MOVEMENT);
         Modules.registerCategory(Categories.MISC);
         Modules.registerCategory(Categories.CHAT);
+        Modules.registerCategory(Categories.RENDER);
         Modules.registerCategory(Categories.EXPLOITS);
         Modules.registerCategory(Categories.UNKNOWN);
     }

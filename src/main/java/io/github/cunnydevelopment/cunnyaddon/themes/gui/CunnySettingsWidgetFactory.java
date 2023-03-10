@@ -3,8 +3,10 @@ package io.github.cunnydevelopment.cunnyaddon.themes.gui;
 import meteordevelopment.meteorclient.gui.DefaultSettingsWidgetFactory;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.GuiThemes;
+import meteordevelopment.meteorclient.gui.screens.settings.StorageBlockListSettingScreen;
 import meteordevelopment.meteorclient.gui.widgets.containers.WTable;
 import meteordevelopment.meteorclient.gui.widgets.input.WDropdown;
+import meteordevelopment.meteorclient.gui.widgets.input.WTextBox;
 
 public class CunnySettingsWidgetFactory extends DefaultSettingsWidgetFactory {
 

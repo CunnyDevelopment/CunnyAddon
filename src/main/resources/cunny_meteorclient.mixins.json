@@ -8,6 +8,7 @@
   "mixins": [
     "DefaultSettingsWidgetFactoryMixin",
     "ESPChunkMixin",
+    "InvUtils$ActionMixin",
     "ModuleAccessor",
     "ModuleMixin",
     "ModulesMixin",
@@ -16,6 +17,7 @@
     "WTooltipMixin"
   ],
   "client": [
-    "ModuleScreenMixin"
+    "ModuleScreenMixin",
+    "ModulesScreenMixin"
   ]
 }

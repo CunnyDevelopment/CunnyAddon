@@ -17,3 +17,5 @@ accessible   field  net/minecraft/client/network/ClientPlayNetworkHandler   last
 accessible   field  net/minecraft/client/network/ClientPlayNetworkHandler   session   Lnet/minecraft/network/encryption/ClientPlayerSession;
 
 accessible   method   net/minecraft/server/network/ServerPlayNetworkHandler   hasIllegalCharacter   (Ljava/lang/String;)Z
+
+accessible method net/minecraft/entity/Entity getRotationVector (FF)Lnet/minecraft/util/math/Vec3d;

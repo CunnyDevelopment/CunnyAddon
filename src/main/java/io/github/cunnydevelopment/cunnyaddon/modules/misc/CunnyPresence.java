@@ -46,11 +46,6 @@ public class CunnyPresence extends CunnyModule {
         .build());
     // Other
     private final SettingGroup sgOther = settings.createGroup("Other");
-    public final Setting<RichPresenceExtra.PresenceType> type = sgOther.add(new EnumSetting.Builder<RichPresenceExtra.PresenceType>()
-        .name("type")
-        .description("What to display as the type.")
-        .defaultValue(RichPresenceExtra.PresenceType.Playing)
-        .build());
     public final Setting<Party> state = sgOther.add(new EnumSetting.Builder<Party>()
         .name("state")
         .description("The state of how players are displayed.")
@@ -77,7 +72,6 @@ public class CunnyPresence extends CunnyModule {
     private final long start = System.currentTimeMillis() / 1000L;
     private boolean wasModified = false;
     private boolean forceUpdate = false;
-    private String lastAppId = "";
     private int ticks = 0;
 
     public CunnyPresence() {
@@ -119,9 +113,7 @@ public class CunnyPresence extends CunnyModule {
 
     public void start() {
         DiscordIPC.start(1057465292109926511L, null);
-        DiscordIPC.setOnError((integer, s) -> {
-            Cunny.LOG.error("Cunny Presence error: {}", s);
-        });
+        DiscordIPC.setOnError((integer, s) -> Cunny.LOG.error("Cunny Presence error: {}", s));
         presence.setStart(start);
         DiscordIPC.setActivity(presence);
         forceUpdate = true;

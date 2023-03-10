@@ -1,17 +1,21 @@
 package io.github.cunnydevelopment.cunnyaddon.hud;
 
+import io.github.cunnydevelopment.cunnyaddon.Cunny;
 import io.github.cunnydevelopment.cunnyaddon.utility.Categories;
 import io.github.cunnydevelopment.cunnyaddon.utility.FileSystem;
 import io.github.cunnydevelopment.cunnyaddon.utility.PacketUtils;
 import io.github.cunnydevelopment.cunnyaddon.utility.StringUtils;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.external.VisualUtils;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.external.gelbooru.GelbooruScraper;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.external.gelbooru.GelbooruUtil;
-import io.github.cunnydevelopment.cunnyaddon.utility.modules.external.gelbooru.Posts;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.VisualUtils;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.gelbooru.GelbooruScraper;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.gelbooru.GelbooruUtil;
+import io.github.cunnydevelopment.cunnyaddon.utility.rendering.gelbooru.Posts;
 import meteordevelopment.meteorclient.renderer.GL;
 import meteordevelopment.meteorclient.renderer.Renderer2D;
 import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.systems.hud.*;
+import meteordevelopment.meteorclient.systems.hud.HudElementInfo;
+import meteordevelopment.meteorclient.systems.hud.HudRenderer;
+import meteordevelopment.meteorclient.systems.hud.XAnchor;
+import meteordevelopment.meteorclient.systems.hud.YAnchor;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.misc.Keybind;
 import meteordevelopment.meteorclient.utils.render.color.Color;
@@ -156,7 +160,7 @@ public class GelbooruScroller extends CunnyHud {
         if (!tags.get().equals(gelbooruScraper.rawTags) || !excludeTags.get().equals(gelbooruScraper.rawExcludedTags)) {
             gelbooruScraper.setTags(tags.get(), excludeTags.get());
             gelbooruScraper.reset();
-            pausedUntilChange = gelbooruScraper.load();
+            pausedUntilChange = !gelbooruScraper.load();
         } else if (!pausedUntilChange) {
             gelbooruScraper.nextPost();
         }
@@ -217,8 +221,11 @@ public class GelbooruScroller extends CunnyHud {
 
     @Override
     public void render(HudRenderer renderer) {
-        if (gelbooruScraper.posts == null || !Utils.canUpdate() || gelbooruScraper.posts.post.isEmpty())
+        if (gelbooruScraper.posts == null || !Utils.canUpdate() || gelbooruScraper.posts.post.isEmpty()) {
+            Cunny.LOG.info("Gelbooru Scroller can't render.");
             return;
+        }
+
         if (currentImage != null) {
             setSize(gelbooruUtil.getFixedWidth() * scale.get(), gelbooruUtil.getFixedHeight() * scale.get());
             GL.bindTexture(VisualUtils.GELBOORU);

@@ -2,7 +2,8 @@
 
 A public meteor addon focused on improving pre-existing meature features.
 
-### How to use:  
+### How to use:
+
 - Install Meteor Client from [Here](https://meteorclient.com/download?devBuild=latest).
 - Download Cunny Addon from [Releases](https://github.com/CunnyDevelopment/HecateAddon/releases).
 - Put the downloaded jar in your mods folder.

@@ -71,7 +71,7 @@ public abstract class ModuleMixin {
         if (CompatibilityConfig.recategorize.containsKey(instance.getClass().getName())) {
             this.category = Categories.get(CompatibilityConfig.recategorize.get(instance.getClass().getName()));
         } else {
-            this.category = Categories.KNOWN_CATEGORIES.contains(value.name) ? Categories.get(value.name) : Categories.UNKNOWN;
+            this.category = Categories.KNOWN_CATEGORIES.contains(value.name) ? Categories.getFromModule(instance, value.name) : Categories.UNKNOWN;
         }
     }
 

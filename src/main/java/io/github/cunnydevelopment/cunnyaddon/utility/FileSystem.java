@@ -128,9 +128,11 @@ public class FileSystem {
     public static void mkdir(String path) {
         String newPath = path;
         String[] splitPath = newPath.split(SEPARATOR);
+
         if (splitPath[splitPath.length - 1].contains(".")) {
             newPath = new File(newPath).getParent();
         }
+
         new File(newPath).mkdirs();
     }
 }
